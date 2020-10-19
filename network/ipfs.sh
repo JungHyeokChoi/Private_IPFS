@@ -68,13 +68,25 @@ function privateSet() {
         docker exec $node ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "PUST"]'
     done
 
+
     # Generates swarm.key file for IPFS Private Network feature.
-    if [ ! -e "go-ipfs-swarm-key-gen/ipfs-swarm-key-gen/swarm.key" ]; then
-        echo "Generate swarm.key file"
+    echo "Generate swarm.key file"
+    
+    if [ ! -d "go-ipfs-swarm-key-gen" ]; then
+        git clone https://github.com/Kubuxu/go-ipfs-swarm-key-gen
+        
         cd go-ipfs-swarm-key-gen/ipfs-swarm-key-gen
-        ./ipfs-swarm-key-gen > swarm.key
+        
+        go build
 
         cd ../..
+    fi
+
+    if [ ! -e "go-ipfs-swarm-key-gen/ipfs-swarm-key-gen/swarm.key" ]; then
+      cd go-ipfs-swarm-key-gen/ipfs-swarm-key-gen
+      ./ipfs-swarm-key-gen > swarm.key
+
+      cd ../..
     fi
 
     echo
